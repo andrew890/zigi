@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Copy content of a directory to a PDS
+#
+# The first argument is the source directory
+# The second argument is the destination PDS
+# remaining arguments are passed to the cp command.
+#
+# Copy is much faster if the PDS is allocated to
+# the address space and multiple members are copied
+# per command.
+#
+# However there are command line length limitations,
+# depending how many files are involved. We can split
+# the files into multiple commands using xargs, but
+# that causes the child commands to run in a separate
+# address space. So we need a child script to perform
+# the allocation and invoke the cp command for
+# multiple members at a time.
+#
+# This script lists the contents of the source
+# direcory, and passes those filenames through xargs
+# to the script that performs the copy.
+#
+MYDIR=$(dirname "$0")
+
+SOURCE=$1
+DEST=$2
+
+# discard first 2 arguments
+shift 2
+
+# list files and pass them via xargs along with the
+# remaming arguments to the child script
+ls $SOURCE/* | xargs $MYDIR/copyFilesToPds $DEST $*

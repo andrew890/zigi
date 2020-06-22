@@ -1,0 +1,3 @@
+/* rexx */
+call bpxwdyn "free fi(ZIGICOPY) msg(2)"
+return RESULT

@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# Copy multiple files from a directoy to a PDS
+# The PDS is allocated and we use _BPX_SHAREAS=MUST
+# to avoid the overhead of allocating and freeing
+# the PDS for each member.
+#
+# The first argument is the target dataset name.
+# The following arguments are arguments to the cp
+# command, including multiple filenames, but
+# excluding the target dataset name (xargs will
+# only build a list on the end of the command).
+#
+# We take the first argument, allocate the dataset
+# and invoke the copy command with the dataset name
+# added to the end of the other arguments.
+
+# _BPX_SHAREAS=MUST because we are using DISP=OLD
+# and copy will fail if it runs in another address
+# space.
+
+MYDIR=$(dirname "$0")
+DATASET=$1
+
+# discard first argument
+shift
+
+export _BPX_SHAREAS=YES
+# Allocate the PDS
+$MYDIR/pdsAlloc $DATASET OLD
+
+# invoke copy with remaining arguments and target
+# pds moved to last argument
+cp $* "//'"$DATASET"'"
+
+$MYDIR/pdsFree

@@ -1,0 +1,28 @@
+#!/bin/sh
+# Copy content of a PDS to a directory
+#
+# The first argument is the source PDS
+# The second argument is the destination directory
+# The remaming arguments are passed to the cp command
+#
+# Copy members of PDS to a directory
+# The PDS is allocated and we use _BPX_SHAREAS=YES
+# to avoid the overhead of allocating and freeing
+# the PDS for each member.
+
+export _BPX_SHAREAS=YES
+
+MYDIR=$(dirname "$0")
+
+SOURCE=$1
+DEST=$2
+
+# discard first 2 arguments
+shift 2
+
+# allocate the PDS
+$MYDIR/pdsAlloc $SOURCE SHR
+
+cp $* "//'"$SOURCE"'" $DEST
+
+$MYDIR/pdsFree

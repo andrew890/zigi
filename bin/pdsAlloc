@@ -1,0 +1,4 @@
+/* rexx */
+parse arg dataset disp
+call bpxwdyn "alloc fi(ZIGICOPY) da("|| dataset || ") " || disp || " reuse msg(2)"
+return RESULT
