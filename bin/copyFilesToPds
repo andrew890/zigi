@@ -25,7 +25,7 @@ DATASET=$1
 # discard first argument
 shift
 
-export _BPX_SHAREAS=YES
+export _BPX_SHAREAS=MUST
 # Allocate the PDS
 $MYDIR/pdsAlloc $DATASET OLD
 
